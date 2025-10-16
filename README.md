@@ -1,9 +1,11 @@
-# Entity-Driven Clean Architecture
+﻿# Entity-Driven Clean Architecture
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![GitHub stars](https://img.shields.io/github/stars/[tu-usuario]/entity-driven-clean-architecture)](https://github.com/[tu-usuario]/entity-driven-clean-architecture/stargazers)
+[![GitHub stars](https://img.shields.io/github/stars/proteo5/entity-driven-clean-architecture)](https://github.com/proteo5/entity-driven-clean-architecture/stargazers)
 
 > A practical, explicit, and scalable architecture for API-first backends
+
+**English Version | [Versión en Español](./README-ES.md)**
 
 ---
 
@@ -169,202 +171,202 @@ Questions? Open an issue or discussion in this repository.
 
 # Entity-Driven Clean Architecture for API-First Backends
 
-**Version 1.0 - Final**  
+**Version 0.1-beta - Beta**  
 **Date:** October 2025
 
 ---
 
-## Resumen Ejecutivo
+## Executive Summary
 
-**Entity-Driven Clean Architecture** es una arquitectura para backends API-first, agnóstica de lenguaje, que organiza el código por entidades de negocio utilizando convenciones explícitas para maximizar claridad, testabilidad y mantenibilidad.
+**Entity-Driven Clean Architecture** is a language-agnostic architecture for API-first backends that organizes code by business entities using explicit conventions to maximize clarity, testability, and maintainability.
 
-### Ventajas Principales
-- **Testabilidad Total**: Core 100% independiente de infraestructura
-- **Agnóstica**: Funciona con REST, GraphQL, gRPC u otros protocolos
-- **Organización Clara**: Estructura por entidades, no por capas técnicas
-- **Explícita**: Nombres descriptivos sobre abreviaciones
-- **Escalabilidad**: Separación clara entre lógica de negocio e infraestructura
-- **Mantenibilidad**: 60% menos archivos con estructura nested cohesiva
+### Key Advantages
+- **Full Testability**: Core 100% independent of infrastructure
+- **Agnostic**: Works with REST, GraphQL, gRPC, or other protocols
+- **Clear Organization**: Structure by entities, not by technical layers
+- **Explicit**: Descriptive names over abbreviations
+- **Scalability**: Clear separation between business logic and infrastructure
+- **Maintainability**: 60% fewer files with cohesive nested structure
 
-### Cuándo Usarla
-- Backends API-first (REST, GraphQL, gRPC)
-- Proyectos que requieren alta testabilidad
-- Sistemas que evolucionarán en complejidad
-- Equipos que valoran consistencia y claridad
-- Arquitecturas distribuidas y microservicios
-
----
-
-## Contexto y Motivación
-
-Los backends tradicionales organizados por capas técnicas (Controllers, Services, Repositories) presentan problemas:
-
-- **Dificultad para encontrar código**: ¿Dónde está la lógica de "registrar usuario"?
-- **Acoplamiento a infraestructura**: Tests que requieren bases de datos, servicios externos
-- **Inconsistencia**: Cada desarrollador estructura el código diferente
-- **Cambios en protocolo requieren refactoring**: Cambiar de REST a GraphQL implica reescribir
-- **Archivos dispersos**: 5+ archivos para entender una operación
-
-**Entity-Driven Clean Architecture** resuelve estos problemas mediante:
-1. Organización por **entidades de negocio** (no por capas técnicas)
-2. **Core** completamente independiente de infraestructura
-3. **Convención explícita** con estructura nested cohesiva
-4. **Snowflake IDs** para sistemas distribuidos
-5. **UTC estricto** en toda la lógica de negocio
+### When to Use It
+- API-first backends (REST, GraphQL, gRPC)
+- Projects requiring high testability
+- Systems that will evolve in complexity
+- Teams that value consistency and clarity
+- Distributed architectures and microservices
 
 ---
 
-## Principios Fundamentales
+## Context and Motivation
 
-### 1. Explícito sobre Implícito - SIEMPRE
+Traditional backends organized by technical layers (Controllers, Services, Repositories) present problems:
 
-**El principio más importante de esta arquitectura.**
+- **Difficulty finding code**: Where is the "register user" logic?
+- **Infrastructure coupling**: Tests that require databases, external services
+- **Inconsistency**: Each developer structures code differently
+- **Protocol changes require refactoring**: Switching from REST to GraphQL means rewriting
+- **Scattered files**: 5+ files to understand one operation
+
+**Entity-Driven Clean Architecture** solves these problems through:
+1. Organization by **business entities** (not by technical layers)
+2. **Core** completely independent of infrastructure
+3. **Explicit convention** with cohesive nested structure
+4. **Snowflake IDs** for distributed systems
+5. **Strict UTC** in all business logic
+
+---
+
+## Fundamental Principles
+
+### 1. Explicit over Implicit - ALWAYS
+
+**The most important principle of this architecture.**
 
 ```
-✅ CORRECTO - Explícito
-UserCCreate.DataIn    # Claro: datos que ENTRAN
-UserCCreate.DataOut   # Claro: datos que SALEN
-UserCCreate.Messages  # Claro: mensajes multiidioma
+✅ CORRECT - Explicit
+UserCCreate.DataIn    # Clear: data going IN
+UserCCreate.DataOut   # Clear: data going OUT
+UserCCreate.Messages  # Clear: multilanguage messages
 
-❌ INCORRECTO - Implícito
-UserCRegisterI        # ¿I de qué? ¿Input? ¿Interface?
-Input                 # ¿Input de qué?
-DTO                   # Demasiado genérico
+❌ INCORRECT - Implicit
+UserCRegisterI        # I for what? Input? Interface?
+Input                 # Input of what?
+DTO                   # Too generic
 ```
 
-### 2. Separación Core vs Infrastructure
+### 2. Core vs Infrastructure Separation
 
-**CORE (Lógica de Negocio)**
-- NO conoce REST, GraphQL, gRPC
-- NO conoce bases de datos (SQL, MongoDB, etc.)
-- NO conoce servicios externos (Email, SMS, WhatsApp)
-- NO conoce el reloj del sistema (DateTime.Now)
-- ES 100% testeable sin mocks complejos
+**CORE (Business Logic)**
+- Does NOT know REST, GraphQL, gRPC
+- Does NOT know databases (SQL, MongoDB, etc.)
+- Does NOT know external services (Email, SMS, WhatsApp)
+- Does NOT know the system clock (DateTime.Now)
+- IS 100% testable without complex mocks
 
 **INFRASTRUCTURE**
-- Adaptadores a protocolos (REST, GraphQL, gRPC)
-- Implementaciones de bases de datos
-- Clientes de servicios externos
-- Autenticación y autorización
-- Manejo de fecha/hora del sistema
-- Caché (Redis, Memory)
+- Adapters to protocols (REST, GraphQL, gRPC)
+- Database implementations
+- External service clients
+- Authentication and authorization
+- System date/time handling
+- Cache (Redis, Memory)
 
-### 3. Organización por Entidad
+### 3. Organization by Entity
 
-El código se agrupa por **entidad de negocio**, no por tipo técnico:
+Code is grouped by **business entity**, not by technical type:
 
 ```
-✅ CORRECTO (Por Entidad)
+✅ CORRECT (By Entity)
 Core/
   Entities/
     UsersQC/
     CompaniesQC/
     OrdersQC/
 
-❌ INCORRECTO (Por Capa Técnica)
+❌ INCORRECT (By Technical Layer)
 Core/
   Services/
   Repositories/
   DTOs/
 ```
 
-### 4. Inversión de Control (IoC) y Dependency Injection
+### 4. Inversion of Control (IoC) and Dependency Injection
 
-**El Core define QUÉ necesita (interfaces), Infrastructure define CÓMO lo hace (implementaciones).**
+**The Core defines WHAT it needs (interfaces), Infrastructure defines HOW to do it (implementations).**
 
 ```
-❌ MAL - Core depende de Infrastructure
-Core → Infrastructure (acoplamiento directo)
+❌ BAD - Core depends on Infrastructure
+Core → Infrastructure (direct coupling)
 
-✅ BIEN - Ambos dependen de abstracciones
+✅ GOOD - Both depend on abstractions
 Core → Interfaces ← Infrastructure
 ```
 
-**El Core NO sabe:**
-- ❌ Si usa SQL Server, PostgreSQL, MongoDB
-- ❌ Si hay caché (Redis, MemoryCache)
-- ❌ Cómo se envían emails (SMTP, SendGrid, AWS SES)
-- ❌ Cómo se envían SMS (Twilio, AWS SNS)
+**The Core does NOT know:**
+- ❌ If it uses SQL Server, PostgreSQL, MongoDB
+- ❌ If there's cache (Redis, MemoryCache)
+- ❌ How emails are sent (SMTP, SendGrid, AWS SES)
+- ❌ How SMS are sent (Twilio, AWS SNS)
 
-**El Core SOLO pide:**
-- ✅ "Dame un usuario por ID"
-- ✅ "Guarda este usuario"
-- ✅ "Envía un email a esta dirección"
+**The Core ONLY asks:**
+- ✅ "Give me a user by ID"
+- ✅ "Save this user"
+- ✅ "Send an email to this address"
 
-### 5. Convención de Nomenclatura QC
+### 5. QC Naming Convention
 
-Cada archivo/clase sigue el patrón: `[Entity][Q|C][Action]`
+Each file/class follows the pattern: `[Entity][Q|C][Action]`
 
-- **Q (Query)**: Lectura de datos, no modifica estado
-- **C (Command)**: Escritura, modifica estado del sistema
+- **Q (Query)**: Data reading, does not modify state
+- **C (Command)**: Writing, modifies system state
 
-**Ejemplos:**
-- `UserCCreate` - Command para crear usuario
-- `UserQGetAll` - Query para obtener todos los usuarios
-- `CompanyCCreate` - Command para crear compañía
-- `CompanyQGetByID` - Query para obtener compañía por ID
+**Examples:**
+- `UserCCreate` - Command to create user
+- `UserQGetAll` - Query to get all users
+- `CompanyCCreate` - Command to create company
+- `CompanyQGetByID` - Query to get company by ID
 
 ### 6. Result Envelope Pattern
 
-**TODO el Core retorna respuestas envueltas en Result<T>:**
+**ALL Core returns responses wrapped in Result<T>:**
 
 ```
 Result<T> {
     state: string          // "success" | "unsuccess" | "empty" | "invalid" | "error"
-    code: string          // Código único (ej: "USER_CREATE:EMAIL_EXISTS")
-    message: Messages     // Mensajes multiidioma
-    data: T              // Datos de respuesta (Output DTO)
-    invalidFields: []    // Campos inválidos
+    code: string          // Unique code (e.g., "USER_CREATE:EMAIL_EXISTS")
+    message: Messages     // Multilanguage messages
+    data: T              // Response data (Output DTO)
+    invalidFields: []    // Invalid fields
 }
 ```
 
-**Estados posibles:**
-- `success` - Operación exitosa con datos
-- `unsuccess` - Operación fallida por regla de negocio
-- `empty` - Operación exitosa pero sin datos (Query sin resultados)
-- `invalid` - Datos de entrada inválidos
-- `error` - Error del sistema/excepción
+**Possible states:**
+- `success` - Successful operation with data
+- `unsuccess` - Operation failed due to business rule
+- `empty` - Successful operation but no data (Query without results)
+- `invalid` - Invalid input data
+- `error` - System error/exception
 
-### 7. Zona Horaria UTC
+### 7. UTC Time Zone
 
-**TODO el sistema maneja UTC internamente:**
-- Core trabaja exclusivamente en UTC
-- Infrastructure guarda/lee en UTC
-- Presentation Layer convierte de timezone usuario → UTC (entrada)
-- Presentation Layer convierte de UTC → timezone usuario (salida)
+**The ENTIRE system handles UTC internally:**
+- Core works exclusively in UTC
+- Infrastructure saves/reads in UTC
+- Presentation Layer converts from user timezone → UTC (input)
+- Presentation Layer converts from UTC → user timezone (output)
 
-### 8. Snowflake IDs (Fuertemente Recomendado)
+### 8. Snowflake IDs (Strongly Recommended)
 
-**Se recomienda usar IDs basados en Twitter Snowflake en lugar de auto-increment integers:**
+**It is recommended to use Twitter Snowflake-based IDs instead of auto-increment integers:**
 
-**Estructura de Snowflake ID:**
+**Snowflake ID Structure:**
 ```
  0                   41           51     64
  |--------------------|-----------|------|
  timestamp (41 bits) | node (10) | seq (12)
 ```
 
-**Ventajas sobre Auto-Increment:**
-- ✅ **Distribución**: Múltiples servidores pueden generar IDs sin conflictos
-- ✅ **Performance**: No requiere consultar base de datos para obtener ID
-- ✅ **Seguridad**: No revela cantidad de registros
-- ✅ **Ordenamiento**: IDs más recientes tienen valores mayores
-- ✅ **Microservicios**: Ideal para arquitecturas distribuidas
+**Advantages over Auto-Increment:**
+- ✅ **Distribution**: Multiple servers can generate IDs without conflicts
+- ✅ **Performance**: Does not require querying database to get ID
+- ✅ **Security**: Does not reveal record count
+- ✅ **Ordering**: More recent IDs have higher values
+- ✅ **Microservices**: Ideal for distributed architectures
 
 ---
 
-## Arquitectura
+## Architecture
 
-### Diagrama de Capas
+### Layer Diagram
 
 ```
 ┌─────────────────────────────────────────────┐
 │         PRESENTATION LAYER                  │
 │      (REST / GraphQL / gRPC)                │
-│  - Autenticación                            │
-│  - Autorización                             │
-│  - Validación de entrada                    │
-│  - Conversión Timezone (User ↔ UTC)         │
+│  - Authentication                           │
+│  - Authorization                            │
+│  - Input validation                         │
+│  - Timezone Conversion (User ↔ UTC)         │
 └─────────────────┬───────────────────────────┘
                   │
                   ↓
@@ -404,7 +406,7 @@ Result<T> {
 └─────────────────────────────────────────────┘
 ```
 
-### Estructura de Proyectos
+### Project Structure
 
 ```
 MySolution/
@@ -468,44 +470,31 @@ MySolution/
 
 ---
 
-## Estructura de Archivos (Nested Pattern)
+## Files Structure (Nested Pattern)
 
-### Comparación: Antes vs Ahora
-
-**ANTES (5 archivos por operación):**
 ```
 UsersQC/
-  ├── User.cs
-  ├── UserCRegister.cs
-  ├── UserCRegisterI.cs      ← Archivo separado
-  ├── UserCRegisterO.cs      ← Archivo separado
-  └── UserCRegisterM.cs      ← Archivo separado
-
-Uso:
-var input = new UserCRegisterI { ... };
-```
-
-**AHORA (2 archivos - 60% reducción):**
-```
-UsersQC/
-  ├── User.cs                # Entity compartida
-  └── UserCCreate.cs         # Todo junto, cohesivo
+  ├── User.cs                # Entity 
+  └── UserCCreate.cs         # All together, cohesive
       ├── class DataIn       # Nested
       ├── class DataOut      # Nested
       ├── class Messages     # Nested
       └── Handler()
+```
 
-Uso (Explícito):
+Usage (Explicit):
+
+```
 var input = new UserCCreate.DataIn { ... };
 var result = await command.Handler(input);
 UserCCreate.DataOut output = result.Data;
 ```
 
-### Anatomía de un Command/Query
+### Command/Query Anatomy
 
-**Pseudocódigo:**
+**Pseudocode:**
 ```
-// UserCCreate.{lang} - Un archivo, todo incluido
+// UserCCreate.{lang} - One File, all included
 
 class UserCCreate {
     
@@ -554,34 +543,36 @@ class UserCCreate {
 }
 ```
 
-**Ver implementaciones completas en:**
-- **C# Examples**: Artefacto separado con código completo
-- **Python Examples**: Artefacto separado con código completo
-- **TypeScript Examples**: Artefacto separado con código completo
+
 
 ---
 
-## 4 Secciones del Handler (Commands)
+## 4 Handler Sections (Commands)
 
-**Los Commands siguen una estructura de 4 secciones en orden:**
+**Commands follow a 4-section structure in order:**
 
-### Sección 1: Clean (Sanitización)
+- Clean
+- Validation
+- Business Rules
+- Process
 
-**Propósito:** Limpiar y normalizar datos de entrada antes de cualquier validación.
+### Section 1: Clean (Sanitization)
 
-**Responsabilidades:**
-- Remover caracteres especiales no deseados
-- Trim espacios en blanco
-- Normalizar formato (lowercase, uppercase)
-- Remover saltos de línea, tabs, etc.
-- Limpiar números (remover comas, símbolos de moneda)
+**Purpose:** Clean and normalize input data before any validation.
 
-**NO hace:**
-- Validar datos
-- Consultar base de datos
-- Lógica de negocio
+**Responsibilities:**
+- Remove unwanted special characters
+- Trim whitespace
+- Normalize format (lowercase, uppercase)
+- Remove line breaks, tabs, etc.
+- Clean numbers (remove commas, currency symbols)
 
-**Ejemplo:**
+**Does NOT:**
+- Validate data
+- Query database
+- Business logic
+
+**Example:**
 ```
 #region Clean
 input.Email = Clean(input.Email).ToLower()
@@ -590,27 +581,27 @@ input.Name = Clean(input.Name)
 #endregion
 ```
 
-### Sección 2: Validation (Validación de Formato)
+### Section 2: Validation (Format Validation)
 
-**Propósito:** Verificar que los datos cumplan requisitos de formato y estructura.
+**Purpose:** Verify that data meets format and structure requirements.
 
-**Responsabilidades:**
-- Campos requeridos
-- Longitud mínima/máxima
-- Formato de email, teléfono, URL
-- Rangos numéricos (min/max)
-- Expresiones regulares
+**Responsibilities:**
+- Required fields
+- Minimum length/maximum
+- Email format, phone, URL
+- Numeric ranges (min/max)
+- Regular expressions
 
-**NO hace:**
-- Consultar base de datos
-- Verificar reglas de negocio complejas
-- Modificar datos
+**Does NOT:**
+- Query database
+- Verify complex business rules
+- Modify data
 
-**Retorna:** `Result<T>` con `State = Invalid` y **código estructurado**
+**Returns:** `Result<T>` with `State = Invalid` and **structured code**
 
-**Código obligatorio:** `[OPERACION]:VALIDATION:[RAZON_ESPECIFICA]`
+**Mandatory code:** `[OPERATION]:VALIDATION:[SPECIFIC_REASON]`
 
-**Ejemplo:**
+**Example:**
 ```
 #region Validation
 prefix = "USER_CREATE"
@@ -641,38 +632,31 @@ if (input.Age < 18 OR input.Age > 120) {
 #endregion
 ```
 
-**Códigos típicos de validación:**
-- `USER_CREATE:VALIDATION:EMAIL_REQUIRED`
-- `USER_CREATE:VALIDATION:EMAIL_INVALID_FORMAT`
-- `USER_CREATE:VALIDATION:PASSWORD_TOO_SHORT`
-- `ORDER_CREATE:VALIDATION:AMOUNT_OUT_OF_RANGE`
-- `ORDER_CREATE:VALIDATION:QUANTITY_REQUIRED`
+### Section 3: Business Rules (Business Rules)
 
-### Sección 3: Business Rules (Reglas de Negocio)
+**Purpose:** Verify business rules that may require database queries.
 
-**Propósito:** Verificar reglas de negocio que pueden requerir consultas a la base de datos.
+**Responsibilities:**
+- Verify record existence
+- Validate uniqueness (no duplicate email)
+- Verify permissions and authorizations
+- Validate states (active user, cancelable order)
+- Verify limits 
+- Validate relationships between entities
 
-**Responsabilidades:**
-- Verificar existencia de registros
-- Validar unicidad (email no duplicado)
-- Verificar permisos y autorizaciones
-- Validar estados (usuario activo, orden cancelable)
-- Verificar límites (cuota alcanzada, máximo de registros)
-- Validar relaciones entre entidades
+**Does:**
+- Query database (Read Only)
+- Call other Queries
+- Verify complex conditions
 
-**SÍ puede:**
-- Consultar base de datos (SOLO lectura)
-- Llamar otros Queries
-- Verificar condiciones complejas
+**Does NOT:**
+- Modify database
+- Create/update/delete records
+- Execute main process
 
-**NO hace:**
-- Modificar base de datos
-- Crear/actualizar/eliminar registros
-- Ejecutar el proceso principal
+**Returns:** `Result<T>` with `State = Unsuccess` if a rule fails
 
-**Retorna:** `Result<T>` con `State = Unsuccess` si falla una regla
-
-**Ejemplo:**
+**Example:**
 ```
 #region Business Rules
 existingUser = await repository.GetByEmail(input.Email)
@@ -695,21 +679,21 @@ if (userCount >= Settings.MaxUsersPerOrganization) {
 #endregion
 ```
 
-### Sección 4: Process (Proceso Principal)
+### Section 4: Process (Main Process)
 
-**Propósito:** Ejecutar la operación principal si todas las validaciones y reglas pasaron.
+**Purpose:** Execute the main operation if all validations and rules passed.
 
-**Responsabilidades:**
-- Crear/actualizar/eliminar registros
-- Ejecutar transacciones
-- Llamar servicios externos (email, SMS, etc.)
-- Generar tokens, códigos
-- Generar Snowflake IDs
-- Crear registros relacionados
+**Responsibilities:**
+- Create/update/delete records
+- Execute transactions
+- Call external services (email, SMS, etc.)
+- Generar tokens
+- Generate Snowflake IDs
+- Create related records
 
-**Retorna:** `Result<T>` con `State = Success` y `Data` poblada
+**Returns:** `Result<T>` with `State = Success` and `Data` 
 
-**Ejemplo:**
+**Example:**
 ```
 #region Process
 // Generate Snowflake ID BEFORE creating entity
@@ -736,23 +720,23 @@ return Result<DataOut>(
 #endregion
 ```
 
-### Notas Importantes
+### Important Notes
 
-**¿Son obligatorias todas las secciones?**
-- ❌ NO todas son obligatorias en todos los casos
-- ✅ SÍ debes seguir el ORDEN si usas las secciones
-- ✅ Queries generalmente solo tienen #region Process
+**Are all sections mandatory?**
+- ❌ NO, not all are mandatory in all cases
+- ✅ YES, you should follow the ORDER if you use the sections
+- ✅ Queries generally only have #regions Clean, Validation and Process 
 
-**Regla de Oro:**
-> Si una sección no es necesaria, omítela. Pero si la usas, respeta el orden: Clean → Validation → Business Rules → Process
+**Golden Rule:**
+> If a section is not necessary, skip it. But if you use it, follow the order.: Clean → Validation → Business Rules → Process
 
 ---
 
-## Interfaces y Dependency Injection
+## Interfaces and Dependency Injection
 
-### Interfaces en el Core
+### Interfaces in the Core
 
-**Pseudocódigo:**
+**Pseudocode:**
 ```
 // IUserRepository
 interface IUserRepository {
@@ -781,9 +765,9 @@ interface IDateTimeProvider {
 }
 ```
 
-### Implementaciones en Infrastructure
+### Implementations in Infrastructure
 
-**Pseudocódigo:**
+**Pseudocode:**
 ```
 // UserRepository - SQL Implementation
 class UserRepository implements IUserRepository {
@@ -824,9 +808,9 @@ class DateTimeProvider implements IDateTimeProvider {
 }
 ```
 
-### Configuración de Dependency Injection
+### Dependency Injection configuration
 
-**Pseudocódigo:**
+**Pseudocode:**
 ```
 // Application Startup
 
@@ -854,27 +838,52 @@ services.RegisterScoped<UserQGetByID>()
 
 ---
 
-## Snowflake IDs - Recomendación Fuerte
+## Snowflake IDs - Highly Recommended
 
-### ¿Por qué Snowflake IDs?
+### Why Snowflake IDs?
 
-**Problemas con Auto-Increment:**
-- ❌ Requiere base de datos centralizada
-- ❌ Bottleneck en alta concurrencia
-- ❌ Revela información del negocio (ID 1000 = 1000 usuarios)
-- ❌ Problemas en sistemas distribuidos
-- ❌ Conflictos al mergear bases de datos
+#### Problems with Auto-Increment:
+- ❌ Requires a centralized database
+- ❌ Bottleneck in high concurrency
+- ❌ Discloses business information (ID 1000 = 1000 users)
+- ❌ Problems in distributed systems
+- ❌ Conflicts when merging databases
 
-**Ventajas de Snowflake:**
-- ✅ Generación distribuida sin coordinación
-- ✅ Performance alta (sin consultar DB)
-- ✅ Ordenamiento cronológico automático
-- ✅ Único globalmente
-- ✅ Ideal para microservicios
+#### Advantages of Snowflake:
+- ✅ Distributed generation without coordination
+- ✅ High performance (no DB query needed)
+- ✅ Automatic chronological ordering
+- ✅ Globally unique
+- ✅ Ideal for microservices
 
-### Implementación
+### Why Snowflake IDs are better than UUIDs:
 
-**Uso en Commands:**
+**Performance & Storage:**
+- ✅ **Smaller size**: 64-bit (8 bytes) vs UUID's 128-bit (16 bytes)
+- ✅ **Better indexing**: Sorted IDs improve B-tree index performance
+- ✅ **Less storage overhead**: Half the size means better memory usage and faster queries
+- ✅ **Database-friendly**: Most databases optimize better for integer types
+
+**Readability & Debugging:**
+- ✅ **Human-readable**: Shorter and easier to read/copy (e.g., `1234567890123456789`)
+- ✅ **Sortable by time**: You can immediately see which ID is newer
+- ✅ **Easier debugging**: Sequential nature makes it easier to track order of operations
+- ✅ **URL-friendly**: Shorter IDs in APIs and URLs
+
+**Scalability & Distribution:**
+- ✅ **Built-in timestamp**: Contains creation time information
+- ✅ **Machine ID embedded**: Can identify which server generated the ID
+- ✅ **No random collisions**: Deterministic generation vs UUID's probabilistic uniqueness
+- ✅ **Optimized for sharding**: Machine ID component makes data distribution easier
+
+**When to still use UUIDs:**
+- Use UUIDs when you need true randomness for security
+- Use UUIDs when you can't coordinate machine IDs
+- Use UUIDs for public-facing identifiers where you don't want sequential IDs
+
+### Implementation
+
+**Usage in Commands:**
 ```
 class UserCCreate {
     private idGenerator: ISnowflakeIdGenerator
@@ -895,7 +904,7 @@ class UserCCreate {
 }
 ```
 
-### Configuración por Servidor
+### Server Configuration
 
 ```
 # Server 1
@@ -914,13 +923,13 @@ NODE_ID=100
 NODE_ID=200
 ```
 
-**CRÍTICO:** Cada servidor/proceso DEBE tener un NODE_ID único para garantizar IDs únicos globalmente.
+**CRITICAL:** Each server/process MUST have a unique NODE_ID to ensure globally unique IDs.
 
 ---
 
-## Helpers de Sanitización
+## Helpers de Sanitization
 
-**Pseudocódigo:**
+**Pseudocode:**
 ```
 function Clean(text: string): string {
     return text
@@ -947,39 +956,38 @@ function CleanNumber(text: string): string {
 
 ---
 
-## Reglas de Oro
+## Golden Rules
 
-### 🔐 **16 Reglas Inquebrantables**
+### 🔐 **16 Unbreakable Rules**
 
-1. **Explícito sobre Implícito**: SIEMPRE priorizar claridad sobre brevedad
-2. **UTC Everywhere in Core**: Core NUNCA maneja otra timezone que no sea UTC
-3. **Handler Method**: Toda Query/Command tiene un método `Handler()` como punto de entrada
-4. **Result Envelope**: TODO retorna `Result<T>` con estados definidos
-5. **Nested Structure per Operation**: DataIn, DataOut, Messages en el mismo archivo
-6. **JSON Communication**: Toda comunicación entre capas es JSON
-7. **Dependency Inversion**: Core define interfaces, Infrastructure las implementa
-8. **No Direct Infrastructure in Core**: Core NUNCA instancia clases de Infrastructure
-9. **Dependency Injection**: Todas las dependencias se inyectan
-10. **Timezone Conversion Only in Presentation**: API layer maneja conversiones TZ
-11. **Messages Required**: Toda operación tiene Messages para multiidioma
-12. **Entity = Persistence Model**: Entity representa exactamente el modelo de DB
-13. **4 Sections Order**: Clean → Validation → Business Rules → Process
-14. **Infrastructure Concerns in Infrastructure**: Cache, logging, métricas = Infrastructure
-15. **Core is Pure Business Logic**: Core solo contiene lógica de negocio
-16. **Snowflake IDs Strongly Recommended**: Usar Snowflake IDs en entidades principales
+1. **Explicit over Implicit**: ALWAYS prioritize clarity over brevity
+2. **UTC Everywhere in Core**: Core NEVER handles any timezone other than UTC
+3. **Handler Method**: Every Query/Command has a `Handler()` method as the entry point
+4. **Result Envelope**: EVERYTHING returns `Result<T>` with defined states
+5. **Nested Structure per Operation**: DataIn, DataOut, Messages in the same file
+6. **Dependency Inversion**: Core defines interfaces, Infrastructure implements them
+7. **No Direct Infrastructure in Core**: Core NEVER instantiates Infrastructure classes
+8. **Dependency Injection**: All dependencies are injected
+9. **Timezone Conversion Only in Presentation**: API layer handles TZ conversions
+10. **Messages Required**: Every operation has Messages for multiple languages
+11. **Entity = Persistence Model**: Entity exactly represents the DB model
+12. **4 Sections Order**: Clean → Validation → Business Rules → Process
+13. **Infrastructure Concerns in Infrastructure**: Cache, logging, metrics = Infrastructure
+14. **Core is Pure Business Logic**: Core only contains business logic
+15. **Snowflake IDs Strongly Recommended**: Use Snowflake IDs in main entities
 
 ---
 
-## Guía de Implementación
+## Implementation Guide
 
-### Paso 1: Crear Estructura de Proyectos
+### Step 1: Create Project Structure
 
-1. Crear proyecto **Core** (sin dependencias externas)
-2. Crear proyecto **Infrastructure** (referencia Core)
-3. Crear proyecto **API** (referencia Core + Infrastructure)
-4. Crear proyecto **Helpers** (opcional, utilidades)
+1. Create project **Core** (no external dependencies)
+2. Create project **Infrastructure** (reference Core)
+3. Create project **API** (reference Core + Infrastructure)
+4. Create project **Helpers** (opcional, utilities)
 
-### Paso 2: Definir Interfaces en Core
+### Step 2: Define Interfaces in Core
 
 ```
 Core/Interfaces/
@@ -989,7 +997,7 @@ Core/Interfaces/
   └── IDateTimeProvider
 ```
 
-### Paso 3: Crear Entity
+### Step 3: Create Entity
 
 ```
 Core/Entities/UsersQC/User.{lang}
@@ -1002,7 +1010,7 @@ User {
 }
 ```
 
-### Paso 4: Implementar Command/Query
+### Step 4: Implement Command/Query
 
 ```
 Core/Entities/UsersQC/UserCCreate.{lang}
@@ -1021,7 +1029,7 @@ class UserCCreate {
 }
 ```
 
-### Paso 5: Implementar Infrastructure
+### Step 5: Implement Infrastructure
 
 ```
 Infrastructure/Database/UserRepository.{lang}
@@ -1029,7 +1037,7 @@ Infrastructure/IdGeneration/SnowflakeIdGenerator.{lang}
 Infrastructure/Services/DateTimeProvider.{lang}
 ```
 
-### Paso 6: Configurar Dependency Injection
+### Step 6: Configure Dependency Injection
 
 ```
 // Get nodeId from configuration
@@ -1043,7 +1051,7 @@ services.RegisterScoped<IUserRepository, UserRepository>()
 services.RegisterScoped<UserCCreate>()
 ```
 
-### Paso 7: Crear Controller
+### Step 7: Create Controller
 
 ```
 API/Controllers/UsersController.{lang}
@@ -1072,162 +1080,142 @@ class UsersController {
 ## Checklist de Implementación
 
 ### Core Layer
-- [ ] Proyecto Core creado sin dependencias externas
-- [ ] Carpeta `Entities/` creada
-- [ ] Carpeta `Interfaces/` creada
-- [ ] Por cada entidad, crear carpeta `[Entity]QC/`
-- [ ] Entity sin sufijos creada (User.cs, Order.cs)
-- [ ] Cada Query/Command tiene estructura nested (DataIn/DataOut/Messages)
-- [ ] Método `Handler()` como punto de entrada
-- [ ] TODO el sistema maneja fechas en UTC
-- [ ] Cero referencias a infraestructura en Core
-- [ ] Interfaces definidas para todos los servicios externos
-- [ ] Comunicación en JSON
+- [ ] Core project created without external dependencies
+- [ ] `Entities/` folder created
+- [ ] `Interfaces/` folder created
+- [ ] For each entity, create folder `[Entity]QC/`
+- [ ] Entity without suffixes created (User.cs, Order.cs)
+- [ ] Each Query/Command has nested structure (DataIn/DataOut/Messages)
+- [ ] `Handler()` Method as entry point
+- [ ] The ENTIRE system handles dates in UTC
+- [ ] Zero references to infrastructure in Core
+- [ ] Interfaces defined for all external services
+
 
 ### Infrastructure Layer
-- [ ] Implementaciones de repositorios
+- [ ] Repository implementations
 - [ ] SnowflakeIdGenerator con NODE_ID único por servidor
-- [ ] DateTimeProvider siempre retorna UTC
-- [ ] Implementaciones de servicios externos
-- [ ] Base de datos guarda fechas en UTC
-- [ ] No contiene lógica de negocio
+- [ ] DateTimeProvider always returns UTC
+- [ ] External service implementations
+- [ ] Database saves dates in UTC
+- [ ] It does not contain business logic
 
 ### API/Presentation Layer
-- [ ] Middleware de autenticación configurado
-- [ ] Middleware de autorización configurado
-- [ ] Controllers llaman método `Handler()` de Commands/Queries
-- [ ] Conversión de fechas: User TZ → UTC (entrada)
-- [ ] Conversión de fechas: UTC → User TZ (salida)
-- [ ] Validación de entrada implementada
-- [ ] Manejo de errores centralizado
-- [ ] Documentación API (Swagger/GraphiQL)
+- [ ] Authentication Middleware 
+- [ ] Authorization Middleware 
+- [ ] Controllers call `Handler()` metthos of Commands/Queries
+- [ ] Date Conversion: User TZ → UTC (input)
+- [ ] Date Conversion: UTC → User TZ (output)
+- [ ] Input validation implemented
+- [ ] Centralized error handling
+- [ ] API Documentation (Swagger/GraphiQL)
 
 ### Naming Conventions
-- [ ] Archivos/Clases: `[Entity][Q|C][Action]`
+- [ ] Files/Classes: `[Entity][Q|C][Action]`
 - [ ] Nested classes: `DataIn`, `DataOut`, `Messages`
 - [ ] Entity: `[Entity]` (sin sufijos)
 - [ ] Método principal: `Handler()`
 
 ### Testing
-- [ ] Tests unitarios de Core (sin mocks complejos)
-- [ ] Tests verifican manejo correcto de UTC
+- [ ] Core unit tests (without complex mocks)
+- [ ] Tests verify correct UTC handling
 - [ ] Tests de conversión timezone en API
-- [ ] Tests de mensajes multiidioma
-- [ ] Tests verifican Snowflake IDs únicos
+- [ ] Multilanguage message tests
+- [ ] Tests unique  Snowflake IDs 
 
 ---
 
-## Preguntas Frecuentes
+## Frequently Asked Questions
 
-**Q: ¿Por qué 2 archivos en lugar de 5?**
-A: La nueva estructura nested agrupa todo lo relacionado a una operación en un solo archivo, mejorando cohesión y reduciendo navegación. Antes: 5 archivos dispersos. Ahora: Entity + 1 archivo con todo nested = 60% menos archivos, 100% más cohesión.
+**Q: Why DataIn/DataOut and not Input/Output or Request/Response?**
+A: Principle of "Explicit over Implicit." Input/Output are generic and can refer to system I/O. Request/Response imply an HTTP context. DataIn/DataOut are explicit: data going into/out of the Handler.
 
-**Q: ¿Por qué DataIn/DataOut y no Input/Output o Request/Response?**
-A: Principio "Explícito sobre Implícito". Input/Output son genéricos y pueden referirse a I/O de sistema. Request/Response implican contexto HTTP. DataIn/DataOut son explícitos: datos que entran/salen del Handler.
+**Q: Can I use this architecture with dynamic languages like Python/Node.js?**
+A: Yes, the principles are agnostic. Python uses nested classes, TypeScript uses namespaces. Complete examples are in the separate artifacts.
 
-**Q: ¿Puedo usar esta arquitectura con lenguajes dinámicos como Python/Node.js?**
-A: Sí, los principios son agnósticos. Python usa nested classes, TypeScript usa namespaces. Los ejemplos completos están en los artefactos separados.
+**Q: What happens if an operation doesn't need an Input or Output DTO?**
+A: You don't create one. Example: `UserQGetAll` doesn't require parameters; it only has DataOut. `UserCUpdate` doesn't require data output. The Messages class is still necessary for potential error messages.
 
-**Q: ¿Qué pasa si una operación no necesita Input DTO?**
-A: No lo crees. Ejemplo: `UserQGetAll` no necesita parámetros, solo tiene DataOut. La clase Messages sigue siendo necesaria para posibles mensajes de error.
+**Q: Where do input validations go?**
+A: **Technical** validations (email format, length) go in the Handler's Validation section. **Business** validations (email already exists) go in the Business Rules section.
 
-**Q: ¿Dónde van las validaciones de entrada?**
-A: Validaciones **técnicas** (formato email, longitud) van en la sección Validation del Handler. Validaciones de **negocio** (email ya existe) van en la sección Business Rules.
+**Q: Can one Command call another Command?**
+A: Yes, but with caution. If the logic is complex, consider extracting it into helper classes or domain services. Avoid long chains of Commands calling Commands.
 
-**Q: ¿Cómo manejo transacciones de base de datos?**
-A: La infraestructura maneja transacciones. El Core define los límites mediante el patrón Unit of Work. El Handler ejecuta operaciones, la infraestructura asegura atomicidad.
+**Q: How do I translate messages dynamically?**
+A: The Messages class receives the language. The Presentation Layer detects the user's language (header, JWT, settings) and passes it when creating the Command/Query.
 
-**Q: ¿Un Command puede llamar a otro Command?**
-A: Sí, pero con precaución. Si la lógica es compleja, considera extraer a clases auxiliares o servicios de dominio. Evita cadenas largas de Commands llamando Commands.
+**Q: What should I do with dates that the user sends?**
+A: If the user sends a date (e.g., "schedule for tomorrow at 3pm"), the Presentation Layer MUST convert it from the user's timezone to UTC before sending it to the Core. The Core only works in UTC.
 
-**Q: ¿Cómo traduzco mensajes dinámicamente?**
-A: La clase Messages recibe el idioma. El Presentation Layer detecta el idioma del usuario (header, JWT, configuración) y lo pasa al crear el Command/Query.
+**Q: Can the Entity have business logic?**
+A: The Entity is a simple data model (POCO/Plain Object). Business logic goes in Commands/Queries. The Entity only has properties for persistence.
 
-**Q: ¿Por qué JSON para comunicación interna?**
-A: Estandarización y consistencia. Facilita debugging, logging, y hace el sistema agnóstico de tecnología. Puedes serializar/deserializar fácilmente entre capas.
+**Q: Can I use ORMs like Entity Framework, SQLAlchemy, TypeORM?**
+A: Yes. ORMs go in the Infrastructure layer. The Core only knows the repository interfaces, not the concrete implementation.
 
-**Q: ¿Qué hago con fechas que el usuario envía?**
-A: Si el usuario envía una fecha (ej: "agendar para mañana a las 3pm"), el Presentation Layer DEBE convertirla del timezone del usuario a UTC antes de enviarla al Core. El Core solo trabaja UTC.
+**Q: How do I test a Command that uses multiple services?**
+A: Mock the interfaces. Since the Core depends on abstractions (IUserRepository, IEmailService), you can easily mock them in unit tests without needing real databases.
 
-**Q: ¿La Entity puede tener lógica de negocio?**
-A: La Entity es un modelo de datos simple (POCO/Plain Object). La lógica de negocio va en Commands/Queries. La Entity solo tiene propiedades para persistencia.
+**Q: Does this architecture work with microservices?**
+A: Yes. Each microservice can internally follow this architecture. Communication between microservices occurs at the Infrastructure layer (HTTP clients, message queues).
 
-**Q: ¿Puedo usar ORMs como Entity Framework, SQLAlchemy, TypeORM?**
-A: Sí. Los ORMs van en la capa Infrastructure. El Core solo conoce las interfaces de repositorios, no la implementación concreta.
+**Q: When NOT to use this architecture?** 
+A: For very simple projects (< 5 entities, basic CRUD without logic), one-off scripts, quick prototypes, or when the team cannot commit to following the conventions.
 
-**Q: ¿Cómo testeo un Command que usa múltiples servicios?**
-A: Mock las interfaces. Como el Core depende de abstracciones (IUserRepository, IEmailService), puedes mockearlas fácilmente en tests unitarios sin necesitar bases de datos reales.
+**Q: Why use Snowflake IDs instead of auto-increment?**
+A: Snowflake IDs are generated locally without querying the database, work in distributed systems without coordination, do not reveal business information, and are ideal for microservices and high concurrency.
 
-**Q: ¿Esta arquitectura funciona con microservicios?**
-A: Sí. Cada microservicio puede seguir esta arquitectura internamente. La comunicación entre microservicios ocurre en la capa Infrastructure (HTTP clients, message queues).
-
-**Q: ¿Cuándo NO usar esta arquitectura?**
-A: Para proyectos muy simples (< 5 entidades, CRUD básico sin lógica), scripts de una sola vez, prototipos rápidos, o cuando el equipo no puede comprometerse a seguir las convenciones.
-
-**Q: ¿Por qué Snowflake IDs en lugar de auto-increment?**
-A: Snowflake IDs son generados localmente sin consultar la base de datos, funcionan en sistemas distribuidos sin coordinación, no revelan información de negocio, y son ideales para microservicios y alta concurrencia.
-
-**Q: ¿Qué pasa si dos servidores generan el mismo Snowflake ID?**
-A: Imposible si cada servidor tiene un NODE_ID único. Los primeros 10 bits del ID identifican el nodo, garantizando unicidad global. Es crítico que cada servidor/proceso tenga su propio NODE_ID.
-
-**Q: ¿Cómo migro de auto-increment a Snowflake?**
-A: Agrega columna snowflake_id, genera IDs para registros existentes, usa dual-ID temporalmente, migra referencias gradualmente. O simplemente usa Snowflake para todas las entidades nuevas.
-
-**Q: ¿Los Snowflake IDs son compatibles con bases de datos relacionales?**
-A: Sí, totalmente. Se almacenan como BIGINT (64 bits). Funcionan perfectamente con PostgreSQL, MySQL, SQL Server, etc. Solo asegúrate de usar el tipo de dato correcto (long/bigint).
-
-**Q: ¿Qué pasa si el reloj del servidor retrocede?**
-A: El generador de Snowflake lanza una excepción. Usa NTP para sincronizar relojes y monitorea clock drift. Nunca permitas que el sistema continúe si detecta retroceso de reloj.
 
 ---
 
-## Ventajas y Limitaciones
+## Advantages and Limitations
 
-### ✅ Ventajas
+### ✅ Advantages
 
-1. **Testabilidad Extrema**: Core testeable sin bases de datos o servicios externos
-2. **Claridad**: Cualquier desarrollador encuentra el código rápidamente
-3. **Flexibilidad de Protocolo**: Cambiar de REST a GraphQL sin tocar Core
-4. **Mantenibilidad**: Código organizado por concepto de negocio
-5. **Onboarding Rápido**: Convenciones claras facilitan incorporación de nuevos devs
-6. **Evolución Independiente**: Core y API evolucionan por separado
-7. **Menos Archivos**: 60% reducción con estructura nested
-8. **Nombres Explícitos**: DataIn/DataOut son autoexplicativos
-9. **Distribución**: Snowflake IDs permiten sistemas distribuidos sin conflictos
-10. **Performance**: IDs generados localmente sin consultar DB
+1. **Extreme Testability**: Core testable without databases or external services
+2. **Clarity**: Any developer finds the code quickly
+3. **Protocol Flexibility**: Switch from REST to GraphQL without touching Core
+4. **Maintainability**: Code organized by business concept
+5. **Quick Onboarding**: Clear conventions make it easier to onboard new developers
+6. **Independent Evolution**: Core and API evolve separately
+7. **Fewer Files**: 60% reduction with nested structure
+8. **Nombres Explícitos**: DataIn/DataOut are self-explanatory
+9. **Distribución**: Snowflake IDs allow distributed systems without conflicts
+10. **Performance**: IDs generated locally without querying DB
 
-### ⚠️ Consideraciones
+### ⚠️ Considerations
 
-1. **Curva de Aprendizaje Inicial**: Requiere disciplina en seguir convenciones
-2. **Archivos Más Largos**: Estructura nested significa archivos de 200-400 líneas
-3. **Boilerplate**: Más código de configuración inicial
-4. **Overkill para Proyectos Simples**: CRUD básicos pueden no justificar esta arquitectura
-5. **Sincronización de Relojes**: Snowflake IDs requieren NTP para evitar conflictos
+1. **Initial Learning Curve**: Requires discipline in following conventions
+2. **Longer Files**: Nested structure means files of 200-400 lines
+3. **Boilerplate**: More initial setup code
+4. **Overkill for Simple Projects**: Basic CRUD may not justify this architecture
+5. **Clock Synchronization**: Snowflake IDs require NTP to avoid conflicts
 
 ### 📊 Trade-offs
 
 | Aspecto | Trade-off |
 |---------|-----------|
-| Setup inicial | 🔴 Más complejo → 🟢 Paga dividendos en mantenimiento |
-| Archivos | 🟢 60% menos archivos → 🔴 Archivos más largos |
-| Acoplamiento | 🟢 Bajo acoplamiento → 🔴 Más interfaces |
-| Tests | 🟢 Muy fácil → 🔴 Requiere configurar DI |
-| Multiidioma | 🟢 Soporte nativo → 🔴 Clase Messages por operación |
-| Timezones | 🟢 Consistencia UTC → 🔴 Conversión en cada endpoint |
-| IDs | 🟢 Snowflake distribuido → 🔴 Requiere NTP y NODE_ID único |
+| Initial setup | 🔴 More complex → 🟢 Pays dividends in maintenance |
+| Files | 🟢 60% less files → 🔴 Larger/Bigger files |
+| Coupling | 🟢 Low coupling → 🔴 Más interfaces |
+| Tests | 🟢 Very Easy → 🔴 Requires configuring DI |
+| Multilanguage | 🟢 Native support → 🔴 Clase Messages |
+| Timezones | 🟢 UTC consistency → 🔴 Conversion at each endpoint |
+| IDs | 🟢 Snowflake distributed → 🔴 Requiere unique NTP and NODE_ID  |
 
 ---
 
-## Escalabilidad
+## Scalability
 
-### Proyectos Pequeños (< 10 entidades)
+### Small Projects (< 10 entities)
 ```
 MyProject.Core/
 MyProject.Infrastructure/
 MyProject.API.REST/
 ```
 
-### Proyectos Medianos (10-50 entidades)
+### Medium Projects (10-50 entities)
 ```
 MyProject.Core/
 MyProject.Infrastructure/
@@ -1239,7 +1227,7 @@ MyProject.API.REST/
 MyProject.API.GraphQL/
 ```
 
-### Proyectos Grandes (50+ entidades)
+### Large Projects (50+ entities)
 ```
 MyProject.Core/
   ├── Entities/
@@ -1253,9 +1241,9 @@ MyProject.API.gRPC/
 MyProject.Workers/        # Background jobs
 ```
 
-### Microservicios
+### Microservices
 
-Cada microservicio usa la misma arquitectura:
+Each microservice uses the same architecture:
 ```
 UserService/
   ├── UserService.Core/
@@ -1268,7 +1256,7 @@ OrderService/
   └── OrderService.API/
 ```
 
-Cada servicio tiene su propio NODE_ID range para Snowflake IDs:
+Each service has its own NODE_ID range for Snowflake IDs:
 ```
 UserService:   NODE_ID = 0-99
 OrderService:  NODE_ID = 100-199
@@ -1277,9 +1265,9 @@ BillingService: NODE_ID = 200-299
 
 ---
 
-## Ejemplos de Uso
+## Usage Examples
 
-### Crear Usuario
+### Create User
 
 **Controller (Presentation Layer):**
 ```
@@ -1345,7 +1333,7 @@ class UserCCreate {
 }
 ```
 
-### Consultar Usuario
+### Query User
 
 **Controller:**
 ```
@@ -1388,27 +1376,26 @@ class UserQGetByID {
 
 ---
 
-## Recursos y Herramientas
+## Resources and Tools
 
-### Sobre el Nombre de la Arquitectura
+### About the Architecture Name
 
-**"Entity-Driven Clean Architecture"** es único en su combinación específica de:
-1. Organización estricta por entidades (no por capas técnicas)
-2. Convención de nomenclatura QC explícita
-3. Patrón Handler obligatorio
-4. Estructura nested con DataIn/DataOut/Messages
-5. Sistema UTC estricto
-6. Result Envelope estandarizado
-7. Snowflake IDs como recomendación
-8. Principio "Explícito sobre Implícito"
+**"Entity-Driven Clean Architecture"** it is unique in its specific combination of:
+1. Strict organization by entities (not by technical layers)
+2. Explicit QC naming convention
+3. Mandatory Handler pattern
+4. Nested structure with DataIn/DataOut/Messages
+5. Strict UTC system
+6. Standardized Result Envelope
+7. Snowflake IDs as a recommendation8. Principle 'Explicit over Implicit'
 
-Conceptos relacionados pero diferentes:
-- **Clean Architecture** (Robert C. Martin) - Principios base
-- **Domain-Driven Design** (Eric Evans) - Enfoque en dominio
-- **CQRS Pattern** - Separación Commands/Queries
+Related but different concepts:
+- **Clean Architecture** (Robert C. Martin) - Core principles
+- **Domain-Driven Design** (Eric Evans) - Domain-focused approach
+- **CQRS Pattern** - Separation of Commands/Queries
 - **Hexagonal Architecture** - Ports and Adapters
 
-### Herramientas Recomendadas
+### Recommended Tools
 
 **Dependency Injection:**
 - C#: Microsoft.Extensions.DependencyInjection, Autofac
@@ -1429,85 +1416,73 @@ Conceptos relacionados pero diferentes:
 - REST: Swagger/OpenAPI
 - GraphQL: GraphiQL, Apollo Studio
 
-### Implementaciones de Referencia
-
-Ver artefactos separados con código completo funcional:
-- **C# Examples**: ~600 líneas con ASP.NET Core, Entity Framework
-- **Python Examples**: ~550 líneas con FastAPI, SQLAlchemy
-- **TypeScript Examples**: ~650 líneas con Express, TypeORM
 
 ---
 
-## Contribuciones
+## Contributions
 
-Este white paper es un documento vivo. Sugerencias de mejora son bienvenidas.
+This white paper is a living document. Improvement suggestions are welcome.
 
-### Cómo Contribuir
-1. Fork el repositorio
-2. Crea branch con tu mejora
-3. Envía Pull Request con descripción clara
+### How to Contribute
+1. Fork the repository
+2. Create a branch with your improvement
+3. Send a Pull Request with a clear description
 
 ---
 
-## Licencia
+## License
 
-Este documento y arquitectura están bajo licencia MIT. Libre de usar en proyectos comerciales y open source.
+This document and architecture are under the MIT license. Free to use in commercial and open source projects.
 
 ---
 
 ## Changelog
 
-### v1.0.0 (2025)
-- Versión inicial del white paper
-- Estructura nested con DataIn/DataOut/Messages
-- Principio "Explícito sobre Implícito"
-- Convención QC establecida
-- Snowflake IDs recomendados
-- Ejemplos en C#, Python, TypeScript
-- 16 Reglas de Oro
-- Result Envelope Pattern
-- UTC estricto documentado
-- 4 secciones del Handler
-- Reducción de 60% en archivos
+### v0.1.0 (2025)
+- Nested structure with DataIn/DataOut/Messages
+- Principle "Explicit over Implicit"
+- Established QC convention
+- Recommended Snowflake IDs
+- Examples in C#, Python, TypeScript
+- 15 Golden Rules
+- Documented strict UTC
+- 4 sections of the Handler
+- 60% reduction in files
 
 ---
 
-## Resumen Final
+## Final Summary
 
-**Entity-Driven Clean Architecture** es una arquitectura práctica, probada y escalable para backends modernos que prioriza:
+**Entity-Driven Clean Architecture** it is a practical, proven, and scalable architecture for modern backends that prioritizes:
 
-1. **Claridad**: Explícito sobre implícito en todo momento
-2. **Organización**: Por entidades de negocio, no por capas técnicas
-3. **Testabilidad**: Core 100% independiente de infraestructura
-4. **Mantenibilidad**: Estructura nested cohesiva con 60% menos archivos
-5. **Escalabilidad**: Desde proyectos pequeños hasta microservicios
-6. **Distribución**: Snowflake IDs para sistemas distribuidos
-7. **Consistencia**: UTC en Core, conversión en Presentation
-8. **Flexibilidad**: Agnóstica de protocolo (REST/GraphQL/gRPC)
+1. **Clarity**: Explicit rather than implicit at all times
+2. **Organization**: By business entities, not by technical layers
+3. **Testability**: Core 100% independent of infrastructure
+4. **Maintainability**: Cohesive nested structure with 60% fewer files
+5. **Scalability**: From small projects to microservices
+6. **Distribution**: Snowflake IDs for distributed systems
+7. **Consistency**: UTC in Core, conversion in Presentation
+8. **Flexibility**: Protocol-agnostic (REST/GraphQL/gRPC)
 
-**Filosofía Core:**
-> "El código debe ser tan explícito que un desarrollador nuevo pueda entender qué hace una operación simplemente leyendo el nombre del archivo y sus clases nested. La arquitectura debe ayudar, no estorbar."
+**Core Philosophy:**
+> "The code should be so explicit that a new developer can understand what an operation does just by reading the file name and its nested classes. The architecture should help, not hinder."
 
-**Empieza hoy:**
-1. Crea tu primer Command con DataIn/DataOut/Messages
-2. Implementa Result Envelope
-3. Usa Snowflake IDs desde el inicio
-4. Mantén UTC estricto en Core
-5. Sigue el orden Clean → Validation → Business Rules → Process
-
----
-
-**¿Preguntas? ¿Feedback?**
-
-Este white paper documenta una arquitectura real, usada en producción, que ha demostrado su valor en múltiples proyectos. Los ejemplos de código en los artefactos separados son funcionales y listos para usar.
-
-**Ver implementaciones completas:**
-- [C# Examples](link-to-artifact)
-- [Python Examples](link-to-artifact)  
-- [TypeScript Examples](link-to-artifact)
+**Start today:**
+1. Create your first Command with DataIn/DataOut/Messages
+2. Implement the Result Envelope
+3. Use Snowflake IDs from the start
+4. Keep strict UTC in Core
+5. Follow the order Clean → Validation → Business Rules → Process
 
 ---
 
-**Creado con ❤️ para la comunidad de desarrolladores**
+**Questions? Feedback?**
 
-*"La mejor arquitectura es aquella que hace el código tan obvio que los comentarios son innecesarios."*
+This white paper documents a real architecture, used in production, that has proven its value in multiple projects. The code examples in the separate artifacts are functional and ready to use.
+
+
+---
+
+**Created with ❤️ for the developer community**
+
+*"The best architecture is the one that makes the code so obvious that comments are unnecessary."*
